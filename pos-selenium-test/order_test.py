@@ -1,3 +1,4 @@
+import random
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 import datetime
@@ -41,11 +42,43 @@ finally:
 
 # ---------------------------------------- Order ----------------------------------------
 try:
-    cards = driver.find_elements(By.CLASS_NAME, "card-body")
-    first_two_cards = cards[:1]
+    menu_button = driver.find_element(By.ID, "menu-btn")
+    product_list = driver.find_element(By.CSS_SELECTOR, "a[href='/Product/ProductList?category=All']")
+
+    menu_button.click()
+    time.sleep(1)
+    product_list.click()
+    time.sleep(2)
+
+    cards = driver.find_elements(By.CLASS_NAME, "clickable-card")
+    first_two_cards = cards[:2]
 
     for i, card in enumerate(first_two_cards):
-        i.clik();
+        card.click()
+        time.sleep(2)
+
+        variant_options = driver.find_elements(By.CLASS_NAME, "variant-option-tag")
+        add_cart_btn = driver.find_element(By.ID, "add-cart")
+        select_option_number = random.randint(0, len(variant_options) -1)
+
+        variant_options[select_option_number].click()
+        time.sleep(1)
+        
+        add_cart_btn.click()
+        time.sleep(2)
+
+    pay_button = driver.find_element(By.ID, "btn-pay")
+    pay_button.click()
+    time.sleep(3)
+
+    va_option = driver.find_element(By.CLASS_NAME, "collapsible-payment--multiple__body")
+    va_option.click()
+    time.sleep(2)
+
+    va_bca = driver.find_element(By.CSS_SELECTOR, "a[href='#/bank-transfer/bca-va']")
+    va_bca.click()
+    time.sleep(2)
+
 
 except Exception as e:
     print(f"Error during order: {e}")
